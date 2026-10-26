@@ -21,16 +21,11 @@ Prompts:
 
 ## 3. How the Model Works  
 
-Explain your scoring approach in simple language.  
+My recommender compares each song’s genre, mood, and energy with the user’s preferences. A matching genre earns 3 points, and a matching mood earns 2 points. Energy adds up to 1 point: the closer the song’s energy is to the user’s desired level, the more points it earns.
 
-Prompts:  
+The program scores every song, sorts them from highest to lowest score, and returns the requested number of recommendations. Songs with equal scores are ordered by song ID, lowest first. Each recommendation includes an explanation showing where its points came from.
 
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
-
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+I replaced the empty starter functions with CSV loading, numerical conversions, weighted scoring, and ranking. The terminal version now loads 18 songs and displays the top 5 recommendations with scores and reasons.
 
 ---
 
