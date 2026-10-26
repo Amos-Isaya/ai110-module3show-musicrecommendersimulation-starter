@@ -17,17 +17,43 @@ Replace this paragraph with your own summary of what your version does.
 
 ## How The System Works
 
-Explain your design in plain language.
+My recommender will compare songs with a user’s music preferences. Real-world systems can use collaborative filtering, which finds patterns across listeners, or content-based filtering, which uses song characteristics. My version will use content-based filtering.
 
-Some prompts to answer:
+### Song Information
+Each Song will use:
+- id: Identifies the song and breaks scoring ties.
+- title and artist: Displayed in the recommendations.
+- genre: The song’s music category.
+- mood: The song’s feeling.
+- energy: Its intensity, from 0 to 1.
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-- How do you choose which songs to recommend
+### User Preferences
+The user preferences dictionary will store:
+- genre: The user’s favorite genre, such as lofi.
+- mood: The user’s preferred mood, such as chill.
+- energy: The user’s desired energy level, such as 0.4.
 
-You can include a simple diagram or bullet list if helpful.
+### Scoring and Ranking
+The Recommender will give each song:
+- 3 points if its genre matches a preferred genre.
+- 2 points if its mood matches a preferred mood.
+- Energy points calculated as:
+  1 - abs(song["energy"] - user_prefs["energy"])
+
+The energy rule rewards songs closer to the user’s desired energy. Genre has the greatest weight because my design prioritizes music category over mood and energy.
+
+The system will sort songs from highest to lowest score and return the requested number of recommendations. Equal scores will be ordered by song ID, lowest first.
+
+Data Flow
+
+Input: User preferences and the 18 songs from the CSV.
+
+Process: Score every song based on genre, mood, and energy similarity.
+
+Output: Sort by highest score and display the top 5 songs. Break ties by song ID, lowest first.
+
+Potential Biases
+The system gives genre the most points, so it may overlook songs from other genres that match the user’s mood and energy. It also treats similar moods, such as “happy” and “joyful,” as different. The catalog contains only 18 fictional songs, so its recommendations have limited variety.
 
 ---
 
@@ -71,12 +97,25 @@ You can add more tests in `tests/test_recommender.py`.
 Paste a sample of your recommender's output here as a text block so a reader can see what it produces:
 
 ```
-# e.g.:
-# User profile: genre=indie, mood=chill, energy=low
-# Recommendations:
-#   1. ...
-#   2. ...
-#   3. ...
+```text
+Loaded songs: 18
+
+Top recommendations:
+
+Midnight Coding - Score: 5.98
+Because: Genre match (+3.0); Mood match (+2.0); Energy similarity (+0.98)
+
+Library Rain - Score: 5.95
+Because: Genre match (+3.0); Mood match (+2.0); Energy similarity (+0.95)
+
+Focus Flow - Score: 4.00
+Because: Genre match (+3.0); Energy similarity (+1.00)
+
+Spacewalk Thoughts - Score: 2.88
+Because: Mood match (+2.0); Energy similarity (+0.88)
+
+Letters Unsent - Score: 0.99
+Because: Energy similarity (+0.99)
 ```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or demo video link here -->

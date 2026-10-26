@@ -59,3 +59,16 @@ def test_explain_recommendation_returns_non_empty_string():
     explanation = rec.explain_recommendation(user, song)
     assert isinstance(explanation, str)
     assert explanation.strip() != ""
+
+def test_lofi_profile_ranks_lofi_first():
+    user = UserProfile(
+        favorite_genre="lofi",
+        favorite_mood="chill",
+        target_energy=0.4,
+        likes_acoustic=False,
+    )
+    rec = make_small_recommender()
+
+    results = rec.recommend(user, k=2)
+
+    assert [song.id for song in results] == [2, 1]
